@@ -82,9 +82,8 @@ int main(int argc, char *argv[]) {
     return usage(argv[0]);
   }
 
-  if (rows != 8 && rows != 16 && rows != 32 && rows != 64) {
-    fprintf(stderr, "Rows can one of 8, 16, 32 or 64 "
-            "for 1:4, 1:8, 1:16 and 1:32 multiplexing respectively.\n");
+  if (rows != 16 && rows != 32) {
+    fprintf(stderr, "Rows can either be 16 or 32\n");
     return 1;
   }
 
@@ -124,7 +123,7 @@ int main(int argc, char *argv[]) {
   if (all_extreme_colors)
     canvas->SetPWMBits(1);
 
-  const int x = x_orig;
+  int x = x_orig;
   int y = y_orig;
 
   if (isatty(STDIN_FILENO)) {
@@ -142,10 +141,17 @@ int main(int argc, char *argv[]) {
       canvas->Clear();
       y = y_orig;
     }
-    if (line_empty)
-      continue;
-    rgb_matrix::DrawText(canvas, font, x, y + font.baseline(), color, line);
-    y += font.height();
+    if (line_empty) continue;
+
+    while (1) {
+      rgb_matrix::DrawText(canvas, font, x, y + font.baseline(), color, line);
+      system("sleep 0.025");
+      x--;
+      canvas->Clear();
+
+
+   }
+    //y += font.height();
   }
 
   // Finished. Shut down the RGB matrix.
@@ -154,3 +160,5 @@ int main(int argc, char *argv[]) {
 
   return 0;
 }
+
+// 80 - 40
