@@ -82,9 +82,8 @@ int main(int argc, char *argv[]) {
     return usage(argv[0]);
   }
 
-  if (rows != 8 && rows != 16 && rows != 32 && rows != 64) {
-    fprintf(stderr, "Rows can one of 8, 16, 32 or 64 "
-            "for 1:4, 1:8, 1:16 and 1:32 multiplexing respectively.\n");
+  if (rows != 16 && rows != 32) {
+    fprintf(stderr, "Rows can either be 16 or 32\n");
     return 1;
   }
 
@@ -124,7 +123,7 @@ int main(int argc, char *argv[]) {
   if (all_extreme_colors)
     canvas->SetPWMBits(1);
 
-  const int x = x_orig;
+  int x = x_orig;
   int y = y_orig;
 
   if (isatty(STDIN_FILENO)) {
@@ -142,10 +141,33 @@ int main(int argc, char *argv[]) {
       canvas->Clear();
       y = y_orig;
     }
-    if (line_empty)
-      continue;
-    rgb_matrix::DrawText(canvas, font, x, y + font.baseline(), color, line);
-    y += font.height();
+    if (line_empty) continue;
+
+    const int messageLength = strlen(line);
+    const int messageWidth = messageLength * 8; // Pixel Width
+    bool scrollIndefinitely = true; // Use this to stop the loop with the key command
+    int secondX = x + messageWidth + 32;
+
+    while (-messageWidth < x && scrollIndefinitely == true) {
+      rgb_matrix::DrawText(canvas, font, x, y + font.baseline(), color, line);
+      rgb_matrix::DrawText(canvas, font, secondX, y + font.baseline(), color, line);
+      system("sleep 0.1");
+      x--;
+      secondX--;
+      canvas->Clear();
+
+      if (-messageWidth == x) { // Checks if they are equal, if so restarts the loop
+         // 16x32 Panels and 3 Panels
+         x = secondX + messageWidth + 32; // Resets it to the start
+      }
+
+      if (-messageWidth == secondX) { // Checks if they are equal, if so restarts the loop
+         // 16x32 Panels and 3 Panels
+         secondX = x + messageWidth + 32; // Resets it to the start
+      }
+
+   }
+    //y += font.height();
   }
 
   // Finished. Shut down the RGB matrix.
@@ -154,3 +176,5 @@ int main(int argc, char *argv[]) {
 
   return 0;
 }
+
+// 80 - 40
