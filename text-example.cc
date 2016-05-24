@@ -151,7 +151,7 @@ int main(int argc, char *argv[]) {
     while (-messageWidth < x && scrollIndefinitely == true) {
       rgb_matrix::DrawText(canvas, font, x, y + font.baseline(), color, line);
       rgb_matrix::DrawText(canvas, font, secondX, y + font.baseline(), color, line);
-      system("sleep 0.1");
+      system("sleep 0.05");
       x--;
       secondX--;
       canvas->Clear();
