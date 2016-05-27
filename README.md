@@ -232,16 +232,12 @@ The text example allows for some interactive output of text (using a bitmap-font
 found in the `fonts/` directory). Even though it is just an example, it can
 be useful in its own right. For instance, you can connect to its input with a
 pipe and simply feed text from a shell-script or other program that wants to
-output something. Let's display the time in blue:
+output something. 
 
-     (while :; do date +%T ; sleep 0.2 ; done) | sudo ./text-example -f fonts/8x13B.bdf -y8 -c2 -C0,0,255
+The [text-example.cc](./text-example.cc) file has been modified in order to support scrolling text. Instead of displaying time, you can pipe text into it and it'll scroll infinitely. 
 
-You could connect this via a pipe to any process that just outputs new
-information on standard-output every now and then. The screen is filled with
-text until it overflows which then clears it. Or sending an empty line explicitly
-clears the screen (if you want to display an empty line, just send a space).
+     (while :; do "Hello World" ; sleep 0.2 ; done) | sudo ./text-example -f fonts/8x13B.bdf -r16 -c3 -C0,0,255
 
-![Time][time]
 
 
 ### Image Viewer ###
